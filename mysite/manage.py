@@ -4,7 +4,7 @@ import os
 import sys
 from ner_module import  ner_model
 
-p = ner_model.Parser()
+#p = ner_model.Parser()
 
 def main():
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mysite.settings')
