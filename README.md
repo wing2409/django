@@ -87,12 +87,13 @@
 
 
 
+def vote(request):
+
     txt = request.POST['nerText']
     returnText = predict(txt)
 
     result = {'resultList' : returnText, 'resultText' : txt}
 
     return render(request, 'index.html', {'result': result})
-
 
 
