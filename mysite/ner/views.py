@@ -21,7 +21,7 @@ char2Idx = {"PADDING": 0, "UNKNOWN": 1}
 for c in " 0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.,-_()[]{}!?:;#'\"/\\%$`&=*+@^~|":
     char2Idx[c] = len(char2Idx)
 
-f = open("data2/char_index.txt", "r", encoding='UTF-8')
+f = open("ner/model/char_index.txt", "r", encoding='UTF-8')
 char_index = f.read()
 
 for c in char_index:
@@ -34,11 +34,11 @@ loc = os.path.dirname(os.path.realpath(__file__))
 print('loc', loc)
 # model = load_model(os.path.join(loc,"models/model.h5"))
 # loading word2Idx
-word2Idx = np.load(os.path.join(loc, "models/word2Idx.npy"), allow_pickle=True).item()
+word2Idx = np.load(os.path.join(loc, "model/word2Idx.npy"), allow_pickle=True).item()
 # loading idx2Label
-idx2Label = np.load(os.path.join(loc, "models/idx2Label.npy"), allow_pickle=True).item()
+idx2Label = np.load(os.path.join(loc, "model/idx2Label.npy"), allow_pickle=True).item()
 
-model = load_model(os.path.join(loc, "models/model.h5"))
+model = load_model(os.path.join(loc, "model/model.h5"))
 model._make_predict_function()
 graph = tf.get_default_graph()
 
@@ -108,22 +108,17 @@ def padding( Sentence):
 def predict(Sentence):
 
     Sentence = words = okt.morphs(Sentence)  # 단어 토큰화
-    print('Sentence', Sentence)
+
     Sentence = addCharInformation(Sentence)
     Sentence = padding(createTensor(Sentence, word2Idx, case2Idx, char2Idx))
     tokens, casing, char = Sentence
     tokens = np.asarray([tokens])
-    casing = np.asarray([casing])
+    #casing = np.asarray([casing])
     char = np.asarray([char])
-    print('tokens', tokens)
-    print('casing', casing)
-    print('char', char)
 
-    pred = model.predict([tokens, casing, char], verbose=False)[0]
+    pred = model.predict([tokens, char], verbose=False)[0]
 
     pred = pred.argmax(axis=-1)
-
-    print('dict', idx2Label)
 
     pred = [idx2Label[x].strip() for x in pred]
 
@@ -134,16 +129,16 @@ def index(request):
     return render(request, 'index.html')
 
 
-def vote2(request):
-    #print(predict('안녕 안녕 하이 방가'))
-    #print(request.POST['nerText'])
+def vote(request):
+
     txt = request.POST['nerText']
+
+    if txt == '' : return render(request, 'index.html')
+
     returnText = predict(txt)
 
+    result = {'resultList' : returnText, 'resultText' : txt}
 
-
-    return render(request, 'index.html', {'result': returnText})
-
-    #return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
+    return render(request, 'index.html', {'result': result})
 
 

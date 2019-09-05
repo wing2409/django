@@ -4,13 +4,13 @@
 </head>
 
 <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-  <a class="navbar-brand" href="#">NER TEST</a>
+  <a class="navbar-brand" href="#">NER TEST PAGE</a>
   </div>
 </nav>
     <div class="jumbotron">
     <div class="container">
       <h1 class="display-3">NER Demo</h1>
-      <p>분석을 원하시는 문장을 입력하시고 모델을 선택하시면 NER 분석 결과를 보실 수 있습니다.</p>
+      <p>분석을 원하시는 문장을 입력하시면 NER 분석 결과를 보실 수 있습니다.</p>
       <form action="{% url 'vote'%}" method="post">
         {% csrf_token %}
       <p><input class="form-control mr-sm-2" id="nerText" name="nerText" type="text" placeholder="입력문장"></p>
@@ -19,14 +19,6 @@
     </div>
   </div>
 
-<!--  <div class="container">
-    &lt;!&ndash; Example row of columns &ndash;&gt;
-    <div class="row">
-      <div class="col-md-4">
-        <h2>분석 결과</h2>
-      </div>
-    </div>
-  </div>-->
 <div class="container">
   <div class="card-deck mb-3 text-center">
     <div class="card mb-4 shadow-sm">
@@ -34,31 +26,91 @@
         <h4 class="my-0 font-weight-normal">분석 결과</h4>
       </div>
       <div class="card-body">
-        <h1 class="card-title pricing-card-title"> {{ result }}</h1>
-        <ul class="list-unstyled mt-3 mb-4">
-        <button class="btn btn-info" >가나다라</button>
-        </ul>
+          <h3 style="text-align:left; margin: 0px 0px 50px 0px">{{result.resultText}}</h3>
+        <table>
+        <thead>
+            <tr>
+                {% for test in result.resultList %}
+                {% if forloop.counter < 16 %}
+                <th style="text-align: center">{{ test.0 }}</th>
+                {% else %}
+                {% endif %}
+                {% endfor %}
+            </tr>
+            <tr>
+                {% for test in result.resultList %}
+                {% if forloop.counter < 16 %}
+                      {% if test.1 == 'O' %}
+                      <th style="text-align: center"><button class="btn btn-Secondary" style="width:70px;" >{{ test.1 }}</button></th>
+                      {% elif test.1 == 'PS' %}
+                      <th style="text-align: center"><button class="btn btn-primary" style="width:70px;" >{{ test.1 }}</button></th>
+                      {% elif test.1 == 'DT' %}
+                      <th style="text-align: center"><button class="btn btn-Success" style="width:70px;" >{{ test.1 }}</button></th>
+                      {% elif test.1 == 'LC' %}
+                      <th style="text-align: center"><button class="btn btn-warning" style="width:70px;" >{{ test.1 }}</button></th>
+                      {% elif test.1 == 'OG' %}
+                      <th style="text-align: center"><button class="btn btn-danger" style="width:70px;" >{{ test.1 }}</button></th>
+                      {% else %}
+                      <th style="text-align: center"><button class="btn btn-Success" style="width:70px;" >{{ test.1 }}</button></th>
+                      {% endif %}
+                {% else %}
+                {% endif %}
+                {% endfor %}
+            </tr>
+            <tr>
+                {% for test in result.resultList %}
+                    {% if forloop.counter > 15 %}
+                    <th style="text-align: center">{{ test.0 }}</th>
+                    {% else %}
+                    {% endif %}
+                {% endfor %}
+            </tr>
+            <tr>
+                {% for test in result.resultList %}
+                    {% if forloop.counter > 15 %}
+                          {% if test.1 == 'O' %}
+                          <th style="text-align: center"><button class="btn btn-Secondary" style="width:70px;" >{{ test.1 }}</button></th>
+                          {% elif test.1 == 'PS' %}
+                          <th style="text-align: center"><button class="btn btn-primary" style="width:70px;" >{{ test.1 }}</button></th>
+                          {% elif test.1 == 'DT' %}
+                          <th style="text-align: center"><button class="btn btn-Success" style="width:70px;" >{{ test.1 }}</button></th>
+                          {% elif test.1 == 'LC' %}
+                          <th style="text-align: center"><button class="btn btn-warning" style="width:70px;" >{{ test.1 }}</button></th>
+                          {% elif test.1 == 'OG' %}
+                          <th style="text-align: center"><button class="btn btn-danger" style="width:70px;" >{{ test.1 }}</button></th>
+                          {% else %}
+                          <th style="text-align: center"><button class="btn btn-Success" style="width:70px;" >{{ test.1 }}</button></th>
+                          {% endif %}
+                    {% else %}
+                    {% endif %}
+                {% endfor %}
+            </tr>
+        </thead>
+        </table>
       </div>
     </div>
   </div>
 </div>
+<!--					<button type="button" class="btn btn-primary">Primary</button>
+					<button type="button" class="btn btn-secondary">Secondary</button>
+					<button type="button" class="btn btn-success">Success</button>
+					<button type="button" class="btn btn-danger">Danger</button>
+					<button type="button" class="btn btn-warning">Warning</button>
+					<button type="button" class="btn btn-info">Info</button>
+					<button type="button" class="btn btn-light">Light</button>
+					<button type="button" class="btn btn-dark">Dark</button>
+					<button type="button" class="btn btn-link">Link</button>-->
 
-<!--  <div class="starter-template">
-    <h1>Bootstrap starter template</h1>
-    <form class="form-inline my-2 my-lg-0" action="{% url 'vote'%}" method="post">
-      {% csrf_token %}
-      <input class="form-control mr-sm-2" id="nerText" name="nerText" type="text" placeholder="입력문장">
-      <button class="btn btn-secondary my-2 my-sm-0" type="submit">분석</button>
 
-      &lt;!&ndash;<p><label for="title">결과 : </label><input type="text" id="title" name="title" value="{{ result}}"/></p>&ndash;&gt;
 
-      <main role="main" class="container">
-            <div class="starter-template">
 
-              <input class="form-control mr-sm-2"  type="text" value="{{ result}}">
-            </div>
-      </main>
-    </form>
-  </div>-->
 
-</main><!-- /.container -->
+
+
+
+
+
+
+
+
+
