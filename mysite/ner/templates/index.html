@@ -11,7 +11,7 @@
     <div class="container">
       <h1 class="display-3">NER Demo</h1>
       <p>분석을 원하시는 문장을 입력하시면 NER 분석 결과를 보실 수 있습니다.</p>
-      <form action="{% url 'vote'%}" method="post">
+      <form action="{% url 'search'%}" method="post">
         {% csrf_token %}
       <p><input class="form-control mr-sm-2" id="nerText" name="nerText" type="text" placeholder="입력문장"></p>
       <p><button class="btn btn-primary btn-lg mr-sm-2" type="submit">분석</button></p>

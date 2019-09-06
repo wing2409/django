@@ -31,7 +31,6 @@ for c in char_index:
 
 loc = os.path.dirname(os.path.realpath(__file__))
 
-print('loc', loc)
 # model = load_model(os.path.join(loc,"models/model.h5"))
 # loading word2Idx
 word2Idx = np.load(os.path.join(loc, "model/word2Idx.npy"), allow_pickle=True).item()
@@ -105,18 +104,21 @@ def padding( Sentence):
     return Sentence
 
 
-def predict(Sentence):
+def predict(Sentence): #보면,  알렉스, 라미레스,를, 당분간 4번에 고정시키려는 기색이 역력하다
 
     Sentence = words = okt.morphs(Sentence)  # 단어 토큰화
-
+    #print('Sentence1', Sentence)
     Sentence = addCharInformation(Sentence)
+    #print('addCharInformation', Sentence)
     Sentence = padding(createTensor(Sentence, word2Idx, case2Idx, char2Idx))
+    #print('createTensor', Sentence)
     tokens, casing, char = Sentence
     tokens = np.asarray([tokens])
     #casing = np.asarray([casing])
     char = np.asarray([char])
 
     pred = model.predict([tokens, char], verbose=False)[0]
+    #print('pred1', pred)
 
     pred = pred.argmax(axis=-1)
 
@@ -129,13 +131,14 @@ def index(request):
     return render(request, 'index.html')
 
 
-def vote(request):
+def search(request):
 
     txt = request.POST['nerText']
 
     if txt == '' : return render(request, 'index.html')
 
     returnText = predict(txt)
+    print('returnText', returnText)
 
     result = {'resultList' : returnText, 'resultText' : txt}
 
